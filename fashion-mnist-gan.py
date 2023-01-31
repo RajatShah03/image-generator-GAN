@@ -23,7 +23,6 @@ constants = {
 }
 
 paths = {
-    "dataset": "dataset",
     "checkpoint": "training-checkpoints",
     "generated_images": "generated-images",
     "models": "models",
@@ -36,24 +35,7 @@ class DataLoader():
         self.batch_size = batch_size
         self.norm_factor = norm_factor
 
-    # def load(self, path):
-    #     ds = keras.utils.image_dataset_from_directory(
-    #         directory=path,
-    #         image_size=self.image_size,
-    #         seed=101
-    #     )\
-    #         .unbatch()\
-    #         .filter(lambda x, y: tf.equal(y, 2) or tf.equal(y, 3))\
-    #         .batch(self.batch_size)
-
-    #     ds = ds.shuffle(buffer_size=5000)\
-    #         .map(self.preprocess)\
-    #         .prefetch(1)\
-    #         .cache()
-
-    #     return ds
-
-    def load(self, path):
+    def load(self):
         (ds, _), _ = keras.datasets.fashion_mnist.load_data()
         ds = self.preprocess(ds)
         ds = tf.data.Dataset.from_tensor_slices(ds)\
@@ -62,10 +44,6 @@ class DataLoader():
             .prefetch(1)\
             .cache()
         return ds
-
-    # def preprocess(self, data, label):
-    #     data = tf.image.resize(data, self.image_size)
-    #     return ((data - self.norm_factor) / self.norm_factor, label)
 
     def preprocess(self, data):
         data = data[..., tf.newaxis]
@@ -279,7 +257,7 @@ def main():
         batch_size=constants["batch_size"],
         norm_factor=constants['norm_factor'])
     print('......Loading dataset\n')
-    dataset = dataloader.load(path=paths["dataset"])
+    dataset = dataloader.load()
     print(f'......Dataset: {dataset}\n')
     print('.'*80)
     print('\n')

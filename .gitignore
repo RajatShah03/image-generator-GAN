@@ -9,3 +9,5 @@ models/
 training-checkpoints/
 
 dataset/
+
+result/
